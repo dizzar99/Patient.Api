@@ -1,0 +1,19 @@
+---
+version: "2.1"
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2017-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_USER=SA
+      - MSSQL_SA_PASSWORD=PASSWORD123!#
+    ports:
+      - 1433:1433
+    volumes:
+      - sqlData:/var/opt/mssql
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P PASSWORD123!# -Q 'SELECT 1'"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s

@@ -1,0 +1,40 @@
+@Patient.Api_HostAddress = http://localhost:5243
+
+# @name create
+POST {{Patient.Api_HostAddress}}/patient/
+Content-Type: application/json
+
+{
+  "name": {
+    "use": "string",
+    "familyName": "string",
+    "givenNames": [
+        "given name 1",
+        "given name 2"
+    ]
+  },
+  "isActive": true,
+  "gender": 0,
+  "birthDate": "2025-08-04T18:41:45.490Z"
+}
+
+###
+
+PUT {{Patient.Api_HostAddress}}/patient/{{create.response.body.$.id}}
+Content-Type: application/json
+
+{
+  "name": {
+    "use": "string",
+    "familyName": "string",
+    "givenNames": [
+        "given name 2"
+    ]
+  },
+  "isActive": true,
+  "gender": 0,
+  "birthDate": "2025-08-04T18:41:45.490Z"
+}
+
+
+###
