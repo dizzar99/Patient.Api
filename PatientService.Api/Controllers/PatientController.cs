@@ -4,6 +4,7 @@ using PatientService.Application.DTOs;
 using PatientService.Application.Models;
 using PatientService.Application.UseCases.CreatePatient;
 using PatientService.Application.UseCases.DeletePatient;
+using PatientService.Application.UseCases.GetPatientById;
 using PatientService.Application.UseCases.GetPatients;
 using PatientService.Application.UseCases.UpdatePatient;
 using PatientService.Domain.Entities;
@@ -14,6 +15,14 @@ namespace PatientService.Api.Controllers
 	[Route("[controller]")]
 	public class PatientController(ISender _sender) : ControllerBase
 	{
+		[HttpGet("{id:guid}", Name = "GetPatientById")]
+		public async Task<Patient> GetById(Guid id)
+		{
+			var patient = await _sender.Send(new GetPatientByIdQuery(id));
+
+			return patient;
+		}
+
 		[HttpGet(Name = "GetAllPatients")]
 		public async Task<IEnumerable<Patient>> GetAll([FromQuery] string[] date)
 		{
