@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "PatientService.Generator": {
+      "commandName": "Project"
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker"
+    }
+  }
+}
