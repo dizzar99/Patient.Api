@@ -75,7 +75,10 @@ namespace PatientService.Api
 
 			services.AddDbContext<AppDbContext>(builder =>
 			{
-				builder.UseSqlServer(connectionString, x => x.MigrationsAssembly(typeof(AppContext).Assembly.FullName));
+				builder.UseSqlServer(connectionString, x =>
+				{
+					x.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName);
+				});
 			});
 
 			return services;
