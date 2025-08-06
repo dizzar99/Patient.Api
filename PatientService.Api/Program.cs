@@ -35,6 +35,7 @@ namespace PatientService.Api
 				.ConfigureDbContext(builder.Configuration)
 				.AddMediatrServices()
 				.AddFilterServices()
+				.AddHealthChecks(builder.Configuration)
 				.AddInfrastructureServices();
 
 			var app = builder.Build();
@@ -51,6 +52,8 @@ namespace PatientService.Api
 			app.UseHttpsRedirection();
 
 			app.UseAuthorization();
+
+			app.MapHealthChecks("/health");
 
 			app.MapControllers();
 
@@ -96,6 +99,13 @@ namespace PatientService.Api
 			services.AddTransient<IFilterHandler<Patient, PatientFilterContext>, DateWithTimeFilter>();
 			services.AddTransient<IFilterHandler<Patient, PatientFilterContext>, DateWithoutTimeFilter>();
 			services.AddTransient<IFilterHandler<Patient, PatientFilterContext>, GenderFilter>();
+
+			return services;
+		}
+
+		public static IServiceCollection AddHealthChecks(this IServiceCollection services, IConfiguration configuration)
+		{
+			services.AddHealthChecks();
 
 			return services;
 		}
