@@ -1,7 +1,5 @@
-﻿using PatientService.Application.Models;
-using PatientService.Application.Specifications.ComrarableSpecifications;
+﻿using PatientService.Application.Specifications.ComparableSpecifications;
 using PatientService.Application.Specifications.Core;
-using System.Net.Http.Headers;
 
 namespace PatientService.Application.UseCases.GetPatients.PatientFilters.DateSpecifications
 {

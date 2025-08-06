@@ -1,7 +1,7 @@
 ﻿using PatientService.Application.Specifications.Core;
 using System.Linq.Expressions;
 
-namespace PatientService.Application.Specifications.ComrarableSpecifications
+namespace PatientService.Application.Specifications.ComparableSpecifications
 {
 	public class LessThanSpecification<T> : ISpecification<T> where T : IComparable<T>
 	{

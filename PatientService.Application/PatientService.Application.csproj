@@ -14,8 +14,4 @@
     <ProjectReference Include="..\PatientService.Domain\PatientService.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Specifications\Genders\" />
-  </ItemGroup>
-
 </Project>
