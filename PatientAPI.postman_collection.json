@@ -1,0 +1,462 @@
+{
+	"info": {
+		"_postman_id": "a579fc2f-bc69-4972-810f-54b221bee1a6",
+		"name": "PatientAPI",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "9828664",
+		"_collection_link": "https://patientapi-team.postman.co/workspace/PatientApi~4c228231-389f-4cb7-bc7e-3192196d80e2/collection/9828664-a579fc2f-bc69-4972-810f-54b221bee1a6?action=share&source=collection_link&creator=9828664"
+	},
+	"item": [
+		{
+			"name": "CreateNewPatient",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let response = pm.response.json();\r",
+							"let guid = response.id;\r",
+							"\r",
+							"pm.environment.set(\"guid\", guid);\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Validate the schema of the response\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"\r",
+							"    pm.expect(responseData).to.be.an('object').that.includes.all.keys('id', 'birthDate', 'isActive', 'name', 'gender');\r",
+							"    pm.expect(responseData.name).to.be.an('object').that.includes.all.keys('use', 'familyName', 'givenNames');\r",
+							"    pm.expect(responseData.name.givenNames).to.be.an('array').that.is.not.empty;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"The birthDate must be in a valid date format\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    let isoDateRegex = /^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?(Z|[\\+\\-]\\d{2}:\\d{2})$/;\r",
+							"    pm.expect(responseData.birthDate).to.match(isoDateRegex, \"birthDate should be in iso format\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const date = new Date();\r",
+							"\r",
+							"pm.environment.set(\"currentDate\", date);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": {\r\n    \"use\": \"string\",\r\n    \"familyName\": \"string\",\r\n    \"givenNames\": [\r\n        \"given name 1\",\r\n        \"given name 2\"\r\n    ]\r\n  },\r\n  \"isActive\": true,\r\n  \"gender\": 0,\r\n  \"birthDate\": \"{{currentDate}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/patient",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"patient"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdatePatient",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(204);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"packages": {},
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": {\r\n    \"use\": \"string\",\r\n    \"familyName\": \"string\",\r\n    \"givenNames\": [\r\n        \"given name 1\"\r\n    ]\r\n  },\r\n  \"isActive\": true,\r\n  \"gender\": 0,\r\n  \"birthDate\": \"{{currentDate}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/patient/{{guid}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"patient",
+						"{{guid}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetPatients",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{baseUrl}}/patient",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"patient"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetPatientById",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Validate the schema of the response\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"\r",
+							"    pm.expect(responseData).to.be.an('object').that.includes.all.keys('id', 'birthDate', 'isActive', 'name', 'gender');\r",
+							"    pm.expect(responseData.name).to.be.an('object').that.includes.all.keys('use', 'familyName', 'givenNames');\r",
+							"    pm.expect(responseData.name.givenNames).to.be.an('array').that.is.not.empty;\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{baseUrl}}/patient/{{guid}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"patient",
+						"{{guid}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetPatientsWithDateTimeFilter",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const currentDate = pm.environment.get(\"currentDate\");\r",
+							"const pastDate = new Date(currentDate);\r",
+							"const futureDate = new Date(currentDate);\r",
+							"\r",
+							"const minutes = 20;\r",
+							"pastDate.setMinutes(pastDate.getMinutes() - minutes);\r",
+							"futureDate.setMinutes(futureDate.getMinutes() + minutes);\r",
+							"\r",
+							"pm.environment.set(\"pastISODate\", pastDate.toISOString());\r",
+							"pm.environment.set(\"futureISODate\", futureDate.toISOString());"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 200ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"The response should contain at least 1 patient\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"\r",
+							"    pm.expect(responseData).to.be.an(\"array\");\r",
+							"    pm.expect(responseData.length).to.be.at.least(1);\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/patient?date=ge{{pastISODate}}&date=le{{futureISODate}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"patient"
+					],
+					"query": [
+						{
+							"key": "date",
+							"value": "ge{{pastISODate}}"
+						},
+						{
+							"key": "date",
+							"value": "le{{futureISODate}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetPatientsWithDateFilter",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const currentDate = pm.environment.get(\"currentDate\");\r",
+							"const pastDate = new Date(currentDate);\r",
+							"const futureDate = new Date(currentDate);\r",
+							"\r",
+							"const hours = 24;\r",
+							"pastDate.setHours(pastDate.getHours() - hours);\r",
+							"futureDate.setHours(futureDate.getHours() + hours);\r",
+							"\r",
+							"pm.environment.set(\"pastDate\", pastDate.toDateString());\r",
+							"pm.environment.set(\"futureDate\", futureDate.toDateString());"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 200ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"The response should contain at least 1 patient\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"\r",
+							"    pm.expect(responseData).to.be.an(\"array\");\r",
+							"    pm.expect(responseData.length).to.be.at.least(1);\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/patient?date=ge{{pastDate}}&date=le{{futureDate}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"patient"
+					],
+					"query": [
+						{
+							"key": "date",
+							"value": "ge{{pastDate}}"
+						},
+						{
+							"key": "date",
+							"value": "le{{futureDate}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetPatientsWithnNonExistingDate",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const currentDate = pm.environment.get(\"currentDate\");\r",
+							"const pastDate = new Date(currentDate);\r",
+							"const futureDate = new Date(currentDate);\r",
+							"\r",
+							"const hours = 24;\r",
+							"pastDate.setHours(pastDate.getHours() - hours);\r",
+							"futureDate.setHours(futureDate.getHours() + hours);\r",
+							"\r",
+							"pm.environment.set(\"pastDate\", pastDate.toDateString());\r",
+							"pm.environment.set(\"futureDate\", futureDate.toDateString());"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 200ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"The response should contain at least 1 patient\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"\r",
+							"    pm.expect(responseData).to.be.an(\"array\");\r",
+							"    pm.expect(responseData.length).to.be.equal(0);\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/patient?date=ge{{futureDate}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"patient"
+					],
+					"query": [
+						{
+							"key": "date",
+							"value": "ge{{futureDate}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeletePatient",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {\r",
+							"    pm.response.to.have.status(204);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/patient/{{guid}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"patient",
+						"{{guid}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

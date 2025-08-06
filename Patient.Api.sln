@@ -14,6 +14,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "resources", "resources", "{4D1758D8-B850-4EB4-B220-220D52CEEFFD}"
 	ProjectSection(SolutionItems) = preProject
 		docker-compose.yml = docker-compose.yml
+		PatientAPI.postman_collection.json = PatientAPI.postman_collection.json
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PatientService.Generator", "PatientService.Generator\PatientService.Generator.csproj", "{0D9C7A36-04DC-4EDE-9BA8-8687006694DB}"
